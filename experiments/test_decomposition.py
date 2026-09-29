@@ -10,7 +10,7 @@ client = OpenAI(
     base_url=os.getenv('LLM_BASE_URL'),
 )
 
-answer = 'Python is a programming language, created in 1991. Midhat is student of SZABIST who codes in Python'
+answer = 'Python is a programming language, created in 1991. Midhat is student of SZABIST, in her final year, who codes in Python'
 
 prompt = f"""Split the answer below into atomic claims, one per line.
 

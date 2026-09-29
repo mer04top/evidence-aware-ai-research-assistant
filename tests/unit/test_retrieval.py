@@ -33,3 +33,9 @@ def test_fusion_uses_bm25_when_weight_is_zero():
 
 def test_fusion_uses_dense_when_weight_is_one():
     assert fuse([(1, 10.0), (2, 5.0)], [(1, 0.5), (2, 0.9)], dense_weight=1.0)[0][0] == 2
+
+# one test is missing - add later
+def test_fusion_rejects_invalid_dense_weight():
+    import pytest
+    with pytest.raises(ValueError):
+        fuse([(1, 10.0)], [(1, 0.5)], dense_weight=5.0)
