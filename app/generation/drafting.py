@@ -1,4 +1,4 @@
-from app.generation.prompts import DRAFTING_SYSTEM_PROMPT, DRAFTING_USER_TEMPLATE, INSUFFICIENT_CONTEXT)
+from app.generation.prompts import DRAFTING_SYSTEM_PROMPT, DRAFTING_USER_TEMPLATE, INSUFFICIENT_CONTEXT
 
 def draft_answer(llm, question: str, passages: list[dict], max_passages: int = 10) -> dict:
     if max_passages < 0:
@@ -17,7 +17,7 @@ def draft_answer(llm, question: str, passages: list[dict], max_passages: int = 1
     user_prompt = DRAFTING_USER_TEMPLATE.format(question=question, passages=passage_text)
     answer = llm.complete(DRAFTING_SYSTEM_PROMPT, user_prompt).strip()
 
-    sufficient = bool(answer) and answer != INSUFFICIENT_CONTEXT
+    sufficient = bool(answer) and INSUFFICIENT_CONTEXT not in answer
 
     return {
         "question": question,
