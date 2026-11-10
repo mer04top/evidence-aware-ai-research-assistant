@@ -1,4 +1,10 @@
+import re
+
 import pymupdf
+
+YEAR = re.compile(r"\b(?:19|20)\d{2}\b")
+CITATION_END = re.compile(r"\b(?:19|20)\d{2}[a-z]?\.\s+(?:[A-Z\[]|$)")
+VENUE = re.compile(r"arXiv|Proceedings|preprint|Conference|Journal|Association for Computational|pages|pp\.|doi|https?://", re.I)
 
 
 def extract_text(pdf_path: str) -> str:
@@ -32,6 +38,12 @@ def chunk_text(
 
     return chunks
 
+def looks_like_references(text: str) -> bool:
+    if len(YEAR.findall(text)) < 4:
+        return False
+
+    return len(CITATION_END.findall(text)) >= 4 or len(VENUE.findall(text)) >= 8
+
 def ingest_pdf(pdf_path: str, paper_id: str) -> list[dict]:
     text = extract_text(pdf_path)
     chunks = chunk_text(text)
@@ -39,6 +51,9 @@ def ingest_pdf(pdf_path: str, paper_id: str) -> list[dict]:
     documents = []
 
     for i, chunk in enumerate(chunks):
+        if looks_like_references(chunk):
+            continue
+
         documents.append({
             "id": f"{paper_id}_{i}",
             "text": chunk,
